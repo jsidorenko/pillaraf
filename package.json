@@ -1,0 +1,20 @@
+{
+  "name": "pillaraf",
+  "version": "1.0.0",
+  "description": "Pillar Application Firewall",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "author": "Pillar Team",
+  "license": "MIT",
+  "dependencies": {
+    "ethereum-rpc": "^0.1.1",
+    "express": "^4.16.2",
+    "mongoose": "^4.13.6",
+    "morgan": "^1.9.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  }
+}
