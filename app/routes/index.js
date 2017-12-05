@@ -5,10 +5,12 @@ const WhitelistedAddress = require('../models/whitelistedAddress');
 const {exitNotFound}     = require('../utils/routingHelpers');
 
 router.postAsync('/', async (req, res, next) => {
-  console.log(req.body);
+  const transaction = getTransaction(req.body);
+  if (!isValidTransaction(transaction)) {
+    return exitNotFound(next);
+  }
 
-  const destinationAddress = '123'; // @todo: extract address from the request
-
+  const destinationAddress = transaction.to;
   const record = await WhitelistedAddress.get({address: destinationAddress});
 
   if (!record) {
@@ -19,3 +21,19 @@ router.postAsync('/', async (req, res, next) => {
 });
 
 module.exports = router;
+
+// @todo: move to utils or middleware
+function getTransaction(request = {}) {
+  if (!request.params || !request.params.length) return null;
+  return request.params[0];
+}
+
+function isValidTransaction(transaction = {}) {
+  console.log(transaction);
+
+  if (!transaction.to) return false;
+  // add other validators here
+
+
+  return true;
+}
