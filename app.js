@@ -1,5 +1,6 @@
 const express        = require('express');
 const logger         = require('morgan');
+const bodyParser     = require('body-parser');
 const mongoose       = require('mongoose');
 mongoose.Promise     = global.Promise;
 
@@ -11,8 +12,8 @@ mongoose.connect(configDB.url, { useMongoClient: true })
   .catch((err) => {console.error(err); process.exit();});
 
 app.use(logger('dev'));                              // log every request to the console
-// app.use(bodyParser.json());                          // parse application/json
-// app.use(bodyParser.urlencoded({ extended: true }));  // parse application/x-www-form-urlencoded
+app.use(bodyParser.json());                          // parse application/json
+app.use(bodyParser.urlencoded({ extended: true }));  // parse application/x-www-form-urlencoded
 
 require('./app/routes/routes.js')(app);
 
