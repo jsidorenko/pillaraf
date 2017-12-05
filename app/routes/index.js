@@ -29,11 +29,12 @@ function getTransaction(request = {}) {
 }
 
 function isValidTransaction(transaction = {}) {
-  console.log(transaction);
-
-  if (!transaction.to) return false;
-  // add other validators here
-
+  if (!transaction.from)     return false;
+  if (!transaction.to)       return false;
+  if (!transaction.gas)      return false;
+  if (!transaction.gasPrice) return false;
+  if (!transaction.value)    return false;
+  if (!transaction.data)     return false;
 
   return true;
 }
