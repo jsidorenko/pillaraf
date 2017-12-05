@@ -6,7 +6,7 @@ mongoose.Promise     = global.Promise;
 
 const app = express();
 
-const configDB = require('./config/database.js');
+const configDB = require('./config/database');
 mongoose.connect(configDB.url, { useMongoClient: true })
   .then(() =>  console.log('Successfully connected to the database'))
   .catch((err) => {console.error(err); process.exit();});

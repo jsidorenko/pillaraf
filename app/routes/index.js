@@ -1,8 +1,11 @@
-const jsonrpc = require('jsonrpc-lite');
-const router = require('../utils/router')();
+const jsonrpc            = require('jsonrpc-lite');
+const EthereumRPC        = require('ethereum-rpc');
 
+const router             = require('../utils/router')();
 const WhitelistedAddress = require('../models/whitelistedAddress');
-const {exitNotFound}     = require('../utils/routingHelpers');
+const configEthRPC       = require('../../config/ethereumRPC');
+
+const {exitNotFound, exitRequestError} = require('../utils/routingHelpers');
 
 router.postAsync('/', async (req, res, next) => {
   const transaction = getTransaction(req.body);
@@ -17,7 +20,19 @@ router.postAsync('/', async (req, res, next) => {
     return exitNotFound(next);
   }
 
-  // everything is ok, do some actions here
+  // everything is ok, send the transaction
+  const ethRPC = new EthereumRPC(configEthRPC.url);
+
+  ethRPC.on('open', eth => {
+    console.log('Connected to the Ethereum network.');
+
+    eth('eth_sendTransaction', [transaction], (err, result) => {
+      if (err) {
+        return exitRequestError(next, err);
+      }
+      res.json(result);
+    });
+  });
 });
 
 module.exports = router;
@@ -29,6 +44,8 @@ function getTransaction(request = {}) {
 }
 
 function isValidTransaction(transaction = {}) {
+  console.log(transaction);
+
   if (!transaction.from)     return false;
   if (!transaction.to)       return false;
   if (!transaction.gas)      return false;
